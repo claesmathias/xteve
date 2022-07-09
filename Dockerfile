@@ -3,7 +3,8 @@ RUN apk update
 RUN apk upgrade
 RUN apk add --no-cache ca-certificates
 
-MAINTAINER alturismo alturismo@gmail.com
+MAINTAINER claesmathias claesmathias@gmail.com
+LABEL org.opencontainers.image.source=https://github.com/claesmathias/xteve
 
 # Extras
 RUN apk add --no-cache curl
