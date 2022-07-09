@@ -1,13 +1,8 @@
 # xteve
-xteve, in docker with cron
 
-docker runs in host mode \
-access xteve webui ip:34400/web/
+## Application Setup
 
-after docker start check your config folder and do your setups, setup is persistent, start from scratch by delete them
-
-cron and xteve start options are updated on docker restart.
-
+Webui can be found at  `<your-ip>:6789`
 
 ## Usage
 
@@ -25,7 +20,7 @@ services:
     network_mode: host
     restart: always
     environment:
-      - TZ=${TZ}
+      - TZ="Europe/Brussels"
     volumes:
       - /path/to/conf:/home/xteve/conf
       - /path/to/xteve:/root/.xteve:rw
@@ -47,7 +42,7 @@ services:
   --net=host \
   --log-opt max-size=10m \
   --log-opt max-file=3 \
-  -e TZ="Europe/Berlin" \
+  -e TZ="Europe/Brussels" \
   -v /path/to/xteve:/root/.xteve:rw \
   -v /path/to/config:/config:rw \
   -v /tmp/xteve/:/tmp/xteve:rw \
@@ -67,4 +62,6 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-v /tmp` | Temporary storage |
 | `-v /TVH` | TvHeaded |
 
+## Versions
 
+* **09.07.22:** - First ARM64 image.
