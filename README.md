@@ -1,4 +1,4 @@
-# xteve
+# xTeve
 
 ## Application Setup
 
