@@ -8,42 +8,63 @@ after docker start check your config folder and do your setups, setup is persist
 
 cron and xteve start options are updated on docker restart.
 
-mounts to use as sample \
-Container Path: /root/.xteve <> /mnt/user/appdata/xteve/ \
-Container Path: /config <> /mnt/user/appdata/xteve/_config/ \
-Container Path: /tmp/xteve <> /tmp/xteve/ \
-Container Path: /TVH <> /mnt/user/appdata/tvheadend/data/ << not needed if no TVHeadend is used \
-while /mnt/user/appdata/ should fit to your system path ...
+
+## Usage
+
+Here are some example snippets to help you get started creating a container.
+
+### docker-compose (recommended, [click here for more info](https://docs.linuxserver.io/general/docker-compose))
+
+```yaml
+---
+version: "2.1"
+services:
+  xteve:
+    image: claesmathias/xteve:latest-arm64
+    container_name: xteve
+    network_mode: host
+    restart: always
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - /path/to/conf:/home/xteve/conf
+      - /path/to/xteve:/root/.xteve:rw
+      - /path/to/config:/config:rw
+      - /tmp/xteve:/tmp/xteve:rw
+    logging:
+      options:
+        max-file: "3"
+        max-size: "10m"
+    restart: unless-stopped
 
 ```
-docker run -d \
+
+### docker cli ([click here for more info](https://docs.docker.com/engine/reference/commandline/cli/))
+
+```bash
+  docker run -d \
   --name=xteve \
   --net=host \
   --log-opt max-size=10m \
   --log-opt max-file=3 \
   -e TZ="Europe/Berlin" \
-  -v /mnt/user/appdata/xteve/:/root/.xteve:rw \
-  -v /mnt/user/appdata/xteve/_config:/config:rw \
+  -v /path/to/xteve:/root/.xteve:rw \
+  -v /path/to/config:/config:rw \
   -v /tmp/xteve/:/tmp/xteve:rw \
-  -v /mnt/user/appdata/tvheadend/data/:/TVH \
-  alturismo/xteve
+  -v /path/to/tvheadend/data/:/TVH `#optional` \
+  claesmathias/xteve:latest-arm64
 ```
 
-to test the cronjob functions \
-docker exec -it "dockername" ./config/cronjob.sh
+## Parameters
 
-included functions are (all can be individual turned on / off)
+Container images are configured using parameters passed at runtime (such as those above). These parameters are separated by a colon and indicate `<external>:<internal>` respectively. For example, `-p 8080:80` would expose port `80` from inside the container to be accessible from the host's IP on port `8080` outside the container.
 
-xteve - iptv and epg proxy server for plex, emby, etc ... thanks to @marmei \
-website: http://xteve.de \
-Discord: https://discordapp.com/channels/465222357754314767/465222357754314773
+| Parameter | Function |
+| :----: | --- |
+| `--net=host` | Use Host Networking |
+| `-v /config` | Config data |
+| `-v /root/.xteve` | User data |
+| `-v /tmp` | Temporary storage |
+| `-v /TVH` | TvHeaded |
 
-some small script lines cause i personally use tvheadend and get playlist for xteve and cp xml data to tvheadend
-added now grab xmltv from tvheadend as source for xteve
 
-added rewrite function for reverse proxy usage for xml to get icon links working,
-
-see cronjob.sh
-
-so, credits to the programmers, i just putted this together in a docker to fit my needs
-# xteve
